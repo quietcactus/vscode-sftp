@@ -1,3 +1,6 @@
+## 1.12.11 - 2026-10-12
+  * Fix "bad file descriptor" when uploading over SFTP: the remote file handle was closed before the modified time was set and the file was closed.
+
 ## 1.12.10 - 2026-10-12
   * Fix SFTP failing with "isDate is not a function" on VS Code / Cursor builds running Node.js 23+.
   * Published as `quietcactus.sftp`.

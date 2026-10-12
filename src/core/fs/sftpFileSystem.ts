@@ -190,7 +190,11 @@ export default class SFTPFileSystem extends RemoteFileSystem {
   async put(input: Readable, path, option?: FileOption): Promise<void> {
     if (option && option.fd) {
       const fd = option.fd as SFTPFileDescriptor;
-      const opt = { ...option, handle: fd.handle };
+      // The caller owns the handle and closes it after futimes(). Since
+      // Node.js 14, writable streams auto-destroy on finish, and ssh2's
+      // WriteStream closes the handle on destroy even with autoClose: false,
+      // which makes the later futimes()/close() fail with "bad file descriptor".
+      const opt = { ...option, handle: fd.handle, autoDestroy: false };
       delete opt.fd;
 
       if (opt.mode) {
@@ -366,6 +370,7 @@ export default class SFTPFileSystem extends RemoteFileSystem {
       encoding?: string;
       mode?: number;
       autoClose?: boolean;
+      autoDestroy?: boolean;
       handle?: FileHandle;
     }
   ): Promise<void> {
