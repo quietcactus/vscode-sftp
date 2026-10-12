@@ -10,3 +10,4 @@ _debug
 !.vscode/launch.json
 /TODO.md
 /INSTALL_DEBUG.md
+*.vsix
