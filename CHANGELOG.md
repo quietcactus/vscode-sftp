@@ -1,3 +1,7 @@
+## 1.12.10 - 2026-10-12
+  * Fix SFTP failing with "isDate is not a function" on VS Code / Cursor builds running Node.js 23+.
+  * Published as `quietcactus.sftp`.
+
 ## 1.12.3 - 2019-04-27
   * Minor improvements.
   * Bug fix.
