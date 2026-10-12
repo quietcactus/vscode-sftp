@@ -16,9 +16,78 @@ Very powerful, with smart features. Very simple, requires just three lines of co
   - File Watcher
   - Multiple configs
   - Switchable profiles
+- [Installation](#installation)
+- [Building a new install file](#building-a-new-install-file)
 - [Commands](https://github.com/liximomo/vscode-sftp/wiki/Command)
 - [Debug](#debug)
 - [Support SFTP Project](#Donation)
+
+## About this fork
+
+This is a fork of [liximomo/vscode-sftp](https://github.com/liximomo/vscode-sftp), published as `quietcactus.sftp`. It fixes SFTP failing with `isDate is not a function` on current VS Code and Cursor builds (Node.js 23+). It is not on the Marketplace, so it is installed from a `.vsix` file.
+
+## Installation
+
+1. Turn off any other SFTP extension (`liximomo.sftp`, `Natizyskunk.sftp`). In the Extensions panel, either uninstall it or click **Disable** (not **Disable (Workspace)**, which only turns it off for the current folder). Running two of them at once makes their commands conflict.
+2. Get the `.vsix` file, either from someone who built it or by [building it yourself](#building-a-new-install-file).
+3. Install it:
+   - **VS Code / Cursor:** open the Extensions panel, click the `...` menu at the top, choose **Install from VSIX...**, and pick the file. In Cursor you can also drag the file onto the Extensions panel.
+   - **Terminal:** `code --install-extension sftp-1.12.10.vsix` (use `cursor` instead of `code` for Cursor). Add `--force` to reinstall the same version.
+4. Reload the window: `Ctrl+Shift+P` / `Cmd+Shift+P`, then **Developer: Reload Window**.
+
+Existing `.vscode/sftp.json` config files keep working.
+
+To upgrade, install a `.vsix` with a higher version the same way. It replaces the old one.
+
+## Building a new install file
+
+One-time setup:
+
+1. Install [Node.js](https://nodejs.org) (LTS) and Yarn (`npm install -g yarn`).
+2. Clone the repo:
+
+   ```
+   git clone https://github.com/quietcactus/vscode-sftp.git
+   cd vscode-sftp
+   ```
+
+Each new build:
+
+1. Get the latest code: `git pull`
+2. Bump the version (for example 1.12.10 to 1.12.11), add an entry to `CHANGELOG.md`, then commit and push both:
+
+   ```
+   npm version patch --no-git-tag-version
+   ```
+
+3. Install dependencies and package. Webpack 4 needs the `--openssl-legacy-provider` flag on current Node.js.
+
+   PowerShell:
+
+   ```
+   yarn install
+   $env:NODE_OPTIONS="--openssl-legacy-provider"
+   npx @vscode/vsce package --yarn
+   ```
+
+   Command Prompt:
+
+   ```
+   yarn install
+   set NODE_OPTIONS=--openssl-legacy-provider
+   npx @vscode/vsce package --yarn
+   ```
+
+   macOS / Linux:
+
+   ```
+   yarn install
+   NODE_OPTIONS=--openssl-legacy-provider npx @vscode/vsce package --yarn
+   ```
+
+4. The file `sftp-<version>.vsix` is created in the repo folder. Install it as described in [Installation](#installation).
+
+`.vsix` files are build output and are ignored by git. To share one, attach it to a GitHub Release.
 
 ## Usage
  If your latest files are on the server, you can start with an empty local folder, then download your project, and from that point sync.  
